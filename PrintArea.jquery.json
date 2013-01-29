@@ -1,6 +1,6 @@
 {
 "name": "PrintArea",
-"title": "Print Area plugin",
+"title": "PrintArea",
 "description": "Prints a specific area of the page. Using json settings, the printed area is either opened in a popup or in a hidden iframe.",
 "keywords": ["print", "printing"],
 "version": "2.0.1",
