@@ -3,7 +3,7 @@
 "title": "Print Area plugin",
 "description": "Print specic areas of the dom using simple jquery syntax. Customize how you want the plugin to work.",
 "keywords": ["print", "printing"],
-"version": "2.1",
+"version": "2.1.0",
 "author": { "name": "Chris Ritschard" },
 "licenses": [
 {
