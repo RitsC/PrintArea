@@ -1,6 +1,5 @@
 /**
- *  Version 2.1
- *      -Contributors: "mindinquiring" : filter to exclude any stylesheet other than print.
+ *  Version 2.1 Copyright (C) 2013  Chris Ritschard
  *  Tested ONLY in IE 8 and FF 3.6. No official support for other browsers, but will
  *      TRY to accomodate challenges in other browsers.
  *  Example:
