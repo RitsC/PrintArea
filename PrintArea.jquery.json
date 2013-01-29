@@ -2,7 +2,7 @@
 "name": "PrintArea",
 "title": "Print Area jQuery plugin",
 "description": "jQuery plugin printing specic areas of the dom.",
-"keywords": [ "color", "animation" ],
+ "keywords": ["print", "printing"],
 "version": "2.1",
 "author": { "name": "Chris Ritschard" },
 "licenses": [
