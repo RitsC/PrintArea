@@ -1,7 +1,7 @@
 /**
- *  Version 2.1.2 Copyright (C) 2013  Chris Ritschard
- *  Tested ONLY in IE 9 and FF 18.0.1. No official support for other browsers, but will
- *      TRY to accomodate challenges in other browsers.
+ *  Version 2.1.3 Copyright (C) 2013  Chris Ritschard
+ *  Tested ONLY in IE 9, FF 18.0.1 and Chrome 24.0.1312.57.
+ *  No official support for other browsers, but will TRY to accomodate challenges in other browsers.
  *  Example:
  *      Print Button: <div id="print_button">Print</div>
  *      Print Area  : <div class="PrintArea"> ... html ... </div>
@@ -87,18 +87,16 @@
     {
         var head = "<head><title>" + settings.popTitle + "</title>";
         $(document).find("link")
+            .filter(function(){ return $(this).attr("rel").toLowerCase() == "stylesheet"; })
             .filter(function(){
-                    return $(this).attr("rel").toLowerCase() == "stylesheet";
-                })
-            .filter(function(){ // this filter contributed by "mindinquiring"
                     var media = $(this).attr("media");
-                    return (media.toLowerCase() == "" || media.toLowerCase() == "print")
+                    return (media == undefined || media.toLowerCase() == "" || media.toLowerCase() == "print")
                 })
             .each(function(){
                     head += '<link type="text/css" rel="stylesheet" href="' + $(this).attr("href") + '" >';
                 });
-        head += "</head>";
-        return head;
+
+        return head += "</head>";
     }
 
     function getBody( printElement )
@@ -108,33 +106,23 @@
 
     function getFormData( ele )
     {
+        // ensure that the correct values are selected/entered if the user cancels the print, changes values, then prints again.
         $("input,select,textarea", ele).each(function(){
-            // In cases where radio, checkboxes and select elements are selected and deselected, and the print
-            // button is pressed between select/deselect, the print screen shows incorrectly selected elements.
-            // To ensure that the correct inputs are selected, when eventually printed, we must inspect each dom element
             var type = $(this).attr("type");
             if ( type == "radio" || type == "checkbox" )
             {
                 if ( $(this).is(":not(:checked)") ) this.removeAttribute("checked");
                 else this.setAttribute( "checked", true );
             }
-            else if ( type == "text" )
-                this.setAttribute( "value", $(this).val() );
-            else if ( type == "select-multiple" || type == "select-one" )
-                $(this).find( "option" ).each( function() {
-                    if ( $(this).is(":not(:selected)") ) this.removeAttribute("selected");
-                    else this.setAttribute( "selected", true );
-                });
-            else if ( type == "textarea" )
+            else if ( type == "text" ) this.setAttribute( "value", $(this).val() );
+            else if ( $(this).is("select") )
             {
-                var v = $(this).attr( "value" );
-                if ($.browser.mozilla)
-                {
-                    if (this.firstChild) this.firstChild.textContent = v;
-                    else this.textContent = v;
-                }
-                else this.innerHTML = v;
+                $(this).find( "option" ).each( function() {
+                    if ( $(this).is(":selected") ) this.setAttribute( "selected", true );
+                    else this.removeAttribute("selected");  // IE has a problem here
+                });
             }
+            else if ( $(this).is("textarea") ) this.innerHTML = $(this).val();
         });
         return ele;
     }
