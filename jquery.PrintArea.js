@@ -1,5 +1,5 @@
 /**
- *  Version 2.1.3 Copyright (C) 2013  Chris Ritschard
+ *  Version 2.2.0 Copyright (C) 2013  Chris Ritschard
  *  Tested ONLY in IE 9, FF 18.0.1 and Chrome 24.0.1312.57.
  *  No official support for other browsers, but will TRY to accomodate challenges in other browsers.
  *  Example:
@@ -106,25 +106,22 @@
 
     function getFormData( ele )
     {
-        // ensure that the correct values are selected/entered if the user cancels the print, changes values, then prints again.
-        $("input,select,textarea", ele).each(function(){
+        var copy = ele.clone();
+        var copiedInputs = $("input,select,textarea", copy);
+        $("input,select,textarea", ele).each(function( i ){
             var type = $(this).attr("type");
-            if ( type == "radio" || type == "checkbox" )
-            {
-                if ( $(this).is(":not(:checked)") ) this.removeAttribute("checked");
-                else this.setAttribute( "checked", true );
-            }
-            else if ( type == "text" ) this.setAttribute( "value", $(this).val() );
-            else if ( $(this).is("select") )
-            {
-                $(this).find( "option" ).each( function() {
-                    if ( $(this).is(":selected") ) this.setAttribute( "selected", true );
-                    else this.removeAttribute("selected");  // IE has a problem here
+            if (type == undefined) type = $(this).is("select") ? "select" : $(this).is("textarea") ? "textarea" : "";
+            var copiedInput = copiedInputs.eq( i );
+
+            if ( type == "radio" || type == "checkbox" ) copiedInput.attr( "checked", $(this).is(":checked") );
+            else if ( type == "text" ) copiedInput.attr( "value", $(this).val() );
+            else if ( type == "select" )
+                $(this).find( "option" ).each( function( i ) {
+                    if ( $(this).is(":selected") ) $("option", copiedInput).eq( i ).attr( "selected", true );
                 });
-            }
-            else if ( $(this).is("textarea") ) this.innerHTML = $(this).val();
+            else if ( type == "textarea" ) copiedInput.text( $(this).val() );
         });
-        return ele;
+        return copy;
     }
 
     function Iframe()
