@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="jquery-1.9.0.js" type="text/JavaScript" language="javascript"></script>
+        <script src="../jquery.PrintArea.js" type="text/JavaScript" language="javascript"></script>
+
+        <link type="text/css" rel="stylesheet" href="PrintArea.css" />
+        <link type="text/css" rel="" href="empty.css" />
+        <link type="text/css" rel="noPrint" href="noPrint.css" />
+    </head>
+<body>
+    <div class="button b1">Print</div>
+    <div class="PrintArea p1">
+        <div>print area 1</div>
+        This is just a sample page to demonstrate this plugin.
+        <div style="color: #000777;">so does this</div>
+        <span class="test">xyz</span>
+        <br>
+        <input name="chkTest1" value="1" type="checkbox">
+        <input name="chkTest2" value="2" type="checkbox">
+        <br>
+        <input value="3" name="rdoTest3" type="radio">
+        <input value="4" name="rdoTest3" type="radio">
+        <br>
+        <input value="" name="textTest5" type="text">
+        <br>
+        <select name="selTest6">
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+        </select>
+        <select name="selTest7" multiple="">
+            <option value="a">a</option>
+            <option value="b">b</option>
+            <option value="c">c</option>
+        </select>
+        <br>
+        <textarea name="textareaTest8"></textarea>
+        <br>
+        <img src="FoesEnd.jpg" id="img2" alt="test" width="200">
+    </div>
+
+    <div style="border: solid 1px #999fff; width: 300px; padding: 20px;">
+        <div style="font-weight: bold;">Settings</div>
+        <table>
+          <tbody><tr>
+            <td><input value="popup" name="mode" id="popup" checked="" type="radio"> Popup</td>
+          </tr>
+          <tr>
+            <td style="padding-left: 20px;"><input value="popup" name="popup" id="closePop" type="checkbox"> Close popup</td>
+          </tr>
+          <tr>
+            <td><input value="iframe" name="mode" id="iFrame" type="radio"> IFrame</td>
+          </tr>
+        </tbody></table>
+    </div>
+
+    <script>
+    $(document).ready(function(){
+        $("div.b1").click(function(){
+
+            var mode = $("input[name='mode']:checked").val();
+            var close = mode == "popup" && $("input#closePop").is(":checked")
+
+            var options = { mode : mode, popClose : close };
+
+            $("div.PrintArea.p1").printArea( options );
+        });
+
+        $("input[name='mode']").click(function(){
+            if ( $(this).val() == "iframe" ) $("#closePop").attr( "checked", false );
+        });
+    });
+
+    </script>
+</body>
+</html>
