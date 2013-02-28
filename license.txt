@@ -1,11 +1,4 @@
 PrintArea is a plugin designed to print specified areas of a web page, as
-designed by the developer.  It is licensed under the MIT agreement, however
-please observe the following request.
-
-Copyright (c) 2013  Chris Ritschard
-
-This "program" is free software: you can redistribute it and/or modify
-it as you see fit, however, you must keep the line with version and
-copyright intact within the .js file in published versions. Thank you.
+designed by the developer.  It is licensed under the MIT agreement.
 
 MIT license: http://opensource.org/licenses/MIT
