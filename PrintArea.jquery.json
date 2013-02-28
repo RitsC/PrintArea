@@ -3,13 +3,13 @@
 "title": "PrintArea",
 "description": "Prints a specific area of the page. Using json settings, the printed area is either opened in a popup or in a hidden iframe.",
 "keywords": ["print", "printing"],
-"version": "2.2.0",
+"version": "2.2.1",
 "author": { "name": "Chris Ritschard" },
 "licenses": [
-{
-"type": "General",
-"url": "https://github.com/RitsC/PrintArea/blob/master/license.txt"
-}
+    {
+    "type": "MIT",
+    "url": "http://www.opensource.org/licenses/mit-license.php"
+    }
 ],
 "dependencies": { "jquery": ">=1.9" }
 }

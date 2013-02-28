@@ -1,5 +1,5 @@
 /**
- *  Version 2.2.0 Copyright (C) 2013  Chris Ritschard
+ *  Version 2.2.1 Copyright (C) 2013  Chris Ritschard
  *  Tested ONLY in IE 9, FF 18.0.1 and Chrome 24.0.1312.57.
  *  No official support for other browsers, but will TRY to accomodate challenges in other browsers.
  *  Example:
