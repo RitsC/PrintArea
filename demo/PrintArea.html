@@ -7,6 +7,9 @@
         <link type="text/css" rel="stylesheet" href="PrintArea.css" />
         <link type="text/css" rel="" href="empty.css" />
         <link type="text/css" rel="noPrint" href="noPrint.css" />
+        <link type="text/css" rel="stylesheet" href="media_all.css" media="all" />
+        <link type="text/css" rel="stylesheet" href="media_none.css" media="xyz" />
+
     </head>
 <body>
     <div class="button b1">Print</div>
@@ -52,6 +55,9 @@
           <tr>
             <td><input value="iframe" name="mode" id="iFrame" type="radio"> IFrame</td>
           </tr>
+          <tr>
+            <td>Extra css: <input type="text" name="extraCss" /></td>
+          </tr>
         </tbody></table>
     </div>
 
@@ -60,9 +66,10 @@
         $("div.b1").click(function(){
 
             var mode = $("input[name='mode']:checked").val();
-            var close = mode == "popup" && $("input#closePop").is(":checked")
+            var close = mode == "popup" && $("input#closePop").is(":checked");
+            var extraCss = $("input[name='extraCss']").val();
 
-            var options = { mode : mode, popClose : close };
+            var options = { mode : mode, popClose : close, extraCss : extraCss };
 
             $("div.PrintArea.p1").printArea( options );
         });
