@@ -1,5 +1,5 @@
 /**
- *  Version 2.3.0 Copyright (C) 2013
+ *  Version 2.3.1 Copyright (C) 2013
  *  Tested in IE 10, FF 21.0 and Chrome 27.0.1453.110
  *  No official support for other browsers, but will TRY to accomodate challenges in other browsers.
  *  Example:
