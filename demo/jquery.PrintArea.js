@@ -1,7 +1,7 @@
 /**
  *  Version 2.3.1 Copyright (C) 2013
  *  Tested in IE 10, FF 21.0 and Chrome 27.0.1453.110
- *  No official support for other browsers, but will TRY to accomodate challenges in other browsers.
+ *  No official support for other browsers, but will TRY to accommodate challenges in other browsers.
  *  Example:
  *      Print Button: <div id="print_button">Print</div>
  *      Print Area  : <div class="PrintArea" id="MyId" class="MyClass"> ... html ... </div>
