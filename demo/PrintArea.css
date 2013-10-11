@@ -1,6 +1,5 @@
 
 .PrintArea {
-    border: 1px solid #BBBBBB;
     margin: 20px 5px;
     padding: 10px;
     width: 400px;
@@ -16,4 +15,16 @@
 }
 span.test {
     color: red;
+}
+
+#Retain.PrintArea.area1 {
+    border: 1px solid #999;
+}
+
+.PrintArea.area1 {
+    border: solid 1px #ffb40f;
+}
+
+.PrintArea.area2 {
+    border: solid 1px #20ff58;
 }

@@ -1,40 +1,46 @@
 /**
- *  Version 2.2.2 Copyright (C) 2013
+ *  Version 2.3.0 Copyright (C) 2013
  *  Tested in IE 10, FF 21.0 and Chrome 27.0.1453.110
  *  No official support for other browsers, but will TRY to accomodate challenges in other browsers.
  *  Example:
  *      Print Button: <div id="print_button">Print</div>
- *      Print Area  : <div class="PrintArea"> ... html ... </div>
+ *      Print Area  : <div class="PrintArea" id="MyId" class="MyClass"> ... html ... </div>
  *      Javascript  : <script>
  *                       $("div#print_button").click(function(){
  *                           $("div.PrintArea").printArea( [OPTIONS] );
  *                       });
  *                     </script>
- *  options are passed as json (json example: {mode: "popup", popClose: false})
+ *  options are passed as json (example: {mode: "popup", popClose: false})
  *
- *  {OPTIONS} | [type]    | (default), values      | Explanation
- *  --------- | --------- | ---------------------- | -----------
- *  @mode     | [string]  | ("iframe"),"popup"     | printable window is either iframe or browser popup
- *  @popHt    | [number]  | (500)                  | popup window height
- *  @popWd    | [number]  | (400)                  | popup window width
- *  @popX     | [number]  | (500)                  | popup window screen X position
- *  @popY     | [number]  | (500)                  | popup window screen Y position
- *  @popTitle | [string]  | ('')                   | popup window title element
- *  @popClose | [boolean] | (false),true           | popup window close after printing
- *  @strict   | [boolean] | (undefined),true,false | strict or loose(Transitional) html 4.01 document standard or undefined to not include at all (only for popup option)
- *  @extraCss | [string]  | ("")                   | comma separated list of extra css to include
+ *  {OPTIONS}   | [type]     | (default), values      | Explanation
+ *  ---------   | ---------  | ---------------------- | -----------
+ *  @mode       | [string]   | (iframe),popup         | printable window is either iframe or browser popup
+ *  @popHt      | [number]   | (500)                  | popup window height
+ *  @popWd      | [number]   | (400)                  | popup window width
+ *  @popX       | [number]   | (500)                  | popup window screen X position
+ *  @popY       | [number]   | (500)                  | popup window screen Y position
+ *  @popTitle   | [string]   | ('')                   | popup window title element
+ *  @popClose   | [boolean]  | (false),true           | popup window close after printing
+ *  @extraCss   | [string]   | ('')                   | comma separated list of extra css to include
+ *  @retainAttr | [string[]] | ["id","class","style"] | string array of attributes to retain for the containment area. (ie: id, style, class)
+ *  @standard   | [string]   | strict, loose, (html5) | Only for popup. For html 4.01, strict or loose document standard, or html 5 standard
+ *  @extraHead  | [string]   | ('')                   | comma separated list of extra elements to be appended to the head tag
  */
 (function($) {
     var counter = 0;
     var modes = { iframe : "iframe", popup : "popup" };
-    var defaults = { mode     : modes.iframe,
-                     popHt    : 500,
-                     popWd    : 400,
-                     popX     : 200,
-                     popY     : 200,
-                     popTitle : '',
-                     popClose : false,
-                     extraCss : '' };
+    var standards = { strict : "strict", loose : "loose", html5 : "html5" };
+    var defaults = { mode       : modes.iframe,
+                     standard   : standards.html5,
+                     popHt      : 500,
+                     popWd      : 400,
+                     popX       : 200,
+                     popY       : 200,
+                     popTitle   : '',
+                     popClose   : false,
+                     extraCss   : '',
+                     extraHead  : '',
+                     retainAttr : ["id","class","style"] };
 
     var settings = {};//global settings
 
@@ -45,7 +51,6 @@
             counter++;
             var idPrefix = "printArea_";
             $( "[id^=" + idPrefix + "]" ).remove();
-            var ele = getFormData( $(this) );
 
             settings.id = idPrefix + counter;
 
@@ -65,7 +70,7 @@
             }
 
             writeDoc.open();
-            writeDoc.write( docType() + "<html>" + getHead() + getBody(ele) + "</html>" );
+            writeDoc.write( docType() + "<html>" + getHead() + getBody( $(this) ) + "</html>" );
             writeDoc.close();
 
             printWindow.focus();
@@ -77,35 +82,58 @@
 
     function docType()
     {
-        if ( settings.mode == modes.iframe || !settings.strict ) return "";
+        if ( settings.mode == modes.iframe ) return "";
 
-        var standard = settings.strict == false ? " Trasitional" : "";
-        var dtd = settings.strict == false ? "loose" : "strict";
+        if ( settings.standard == standards.html5 ) return "<!DOCTYPE html>";
 
-        return '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01' + standard + '//EN" "http://www.w3.org/TR/html4/' + dtd +  '.dtd">';
+        var transitional = settings.standard == standards.loose ? " Transitional" : "";
+        var dtd = settings.standard == standards.loose ? "loose" : "strict";
+
+        return '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01' + transitional + '//EN" "http://www.w3.org/TR/html4/' + dtd +  '.dtd">';
     }
 
     function getHead()
     {
-        var head = "<head><title>" + settings.popTitle + "</title>";
+        var extraHead = "";
+        var links = "";
+
+        if ( settings.extraHead ) settings.extraHead.replace( /([^,]+)/g, function(m){ extraHead += m });
+
         $(document).find("link")
-            .filter(function(){ return $(this).attr("rel").toLowerCase() == "stylesheet"; })
-            .filter(function(){
-                    var media = $(this).attr("media");
-                    return (media == undefined || media.toLowerCase() == "" || media.toLowerCase() == "print" || media.toLowerCase() == "all")
+            .filter(function(){ // Requirement: <link> element MUST have rel="stylesheet" to be considered in print document
+                    var relAttr = $(this).attr("rel");
+                    return ($.type(relAttr) === 'undefined') == false && relAttr.toLowerCase() == 'stylesheet';
+                })
+            .filter(function(){ // Include if media is undefined, empty, print or all
+                    var mediaAttr = $(this).attr("media");
+                    return $.type(mediaAttr) === 'undefined' || mediaAttr == "" || mediaAttr.toLowerCase() == 'print' || mediaAttr.toLowerCase() == 'all'
                 })
             .each(function(){
-                    head += '<link type="text/css" rel="stylesheet" href="' + $(this).attr("href") + '" >';
+                    links += '<link type="text/css" rel="stylesheet" href="' + $(this).attr("href") + '" >';
                 });
+        if ( settings.extraCss ) settings.extraCss.replace( /([^,\s]+)/g, function(m){ links += '<link type="text/css" rel="stylesheet" href="' + m + '">' });
 
-        if ( settings.extraCss ) settings.extraCss.replace( /([^,\s]+)/g, function(m){ head += '<link type="text/css" rel="stylesheet" href="' + m + '">' });
-
-        return head += "</head>";
+        return "<head><title>" + settings.popTitle + "</title>" + extraHead + links + "</head>";
     }
 
-    function getBody( printElement )
+    function getBody( elements )
     {
-        return '<body><div class="' + $(printElement).attr("class") + '">' + $(printElement).html() + '</div></body>';
+        var htm = "";
+        var attrs = settings.retainAttr;
+        elements.each(function() {
+            var ele = getFormData( $(this) );
+
+            var attributes = ""
+            for ( var x in attrs )
+            {
+                var eleAttr = $(ele).attr( attrs[x] );
+                if ( eleAttr ) attributes += (attributes.length > 0 ? " ":"") + attrs[x] + "='" + eleAttr + "'";
+            }
+
+            htm += '<div ' + attributes + '>' + $(ele).html() + '</div>';
+        });
+
+        return "<body>" + htm + "</body>";
     }
 
     function getFormData( ele )
@@ -113,17 +141,17 @@
         var copy = ele.clone();
         var copiedInputs = $("input,select,textarea", copy);
         $("input,select,textarea", ele).each(function( i ){
-            var type = $(this).attr("type");
-            if (type == undefined) type = $(this).is("select") ? "select" : $(this).is("textarea") ? "textarea" : "";
+            var typeInput = $(this).attr("type");
+            if ($.type(typeInput) === 'undefined') typeInput = $(this).is("select") ? "select" : $(this).is("textarea") ? "textarea" : "";
             var copiedInput = copiedInputs.eq( i );
 
-            if ( type == "radio" || type == "checkbox" ) copiedInput.attr( "checked", $(this).is(":checked") );
-            else if ( type == "text" ) copiedInput.attr( "value", $(this).val() );
-            else if ( type == "select" )
+            if ( typeInput == "radio" || typeInput == "checkbox" ) copiedInput.attr( "checked", $(this).is(":checked") );
+            else if ( typeInput == "text" ) copiedInput.attr( "value", $(this).val() );
+            else if ( typeInput == "select" )
                 $(this).find( "option" ).each( function( i ) {
                     if ( $(this).is(":selected") ) $("option", copiedInput).eq( i ).attr( "selected", true );
                 });
-            else if ( type == "textarea" ) copiedInput.text( $(this).val() );
+            else if ( typeInput == "textarea" ) copiedInput.text( $(this).val() );
         });
         return copy;
     }
@@ -153,7 +181,7 @@
     {
         var windowAttr = "location=yes,statusbar=no,directories=no,menubar=no,titlebar=no,toolbar=no,dependent=no";
         windowAttr += ",width=" + settings.popWd + ",height=" + settings.popHt;
-        windowAttr += ",resizable=yes,screenX=" + settings.popX + ",screenY=" + settings.popY + ",personalbar=no,scrollbars=no";
+        windowAttr += ",resizable=yes,screenX=" + settings.popX + ",screenY=" + settings.popY + ",personalbar=no,scrollbars=yes";
 
         var newWin = window.open( "", "_blank",  windowAttr );
 

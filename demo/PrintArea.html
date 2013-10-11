@@ -4,19 +4,24 @@
         <script src="jquery-1.9.0.js" type="text/JavaScript" language="javascript"></script>
         <script src="jquery.PrintArea.js" type="text/JavaScript" language="javascript"></script>
 
-        <link type="text/css" rel="stylesheet" href="PrintArea.css" />
-        <link type="text/css" rel="" href="empty.css" />
-        <link type="text/css" rel="noPrint" href="noPrint.css" />
-        <link type="text/css" rel="stylesheet" href="media_all.css" media="all" />
-        <link type="text/css" rel="stylesheet" href="media_none.css" media="xyz" />
-
+        <link type="text/css" rel="stylesheet" href="PrintArea.css" />                <!-- Y : rel is stylesheet and media is in [all,print,empty,undefined] -->
+        <link type="text/css" rel="stylesheet" href="media_all.css"  media="all" />   <!-- Y : rel is stylesheet and media is in [all,print,empty,undefined] -->
+        <link type="text/css" rel=""           href="empty.css" />                    <!-- N : rel is not stylesheet -->
+        <link type="text/css" rel="noPrint"    href="noPrint.css" />                  <!-- N : rel is not stylesheet -->
+        <link type="text/css" rel="stylesheet" href="media_none.css" media="xyz" />   <!-- N : media not in [all,print,empty,undefined] -->
+        <link type="text/css"                  href="no_rel.css"     media="print" /> <!-- N : no rel attribute -->
+        <link type="text/css"                  href="no_rel_no_media.css"          /> <!-- N : no rel, no media attributes -->
     </head>
 <body>
-    <div class="button b1">Print</div>
-    <div class="PrintArea p1">
-        <div>print area 1</div>
+  <div style="border: solid 2px #999fff; float: left; padding: 5px; margin-bottom: 5px;">
+    <div style="text-align: center;">
+        <span style="font-weight: bold;">Contains content that I want to print</span>
+        <br>
         This is just a sample page to demonstrate this plugin.
-        <div style="color: #000777;">so does this</div>
+    </div>
+    <div class="PrintArea area1 both" id="Retain">
+        <div>Print Area 1</div>
+        <span style="color: #000777;">print me</span>
         <span class="test">xyz</span>
         <br>
         <input name="chkTest1" value="1" type="checkbox">
@@ -43,8 +48,46 @@
         <img src="FoesEnd.jpg" id="img2" alt="test" width="200">
     </div>
 
-    <div style="border: solid 1px #999fff; width: 300px; padding: 20px;">
-        <div style="font-weight: bold;">Settings</div>
+    <div style="border: solid 1px #999; margin: 20px 5px; padding: 20px;">
+        I don't want this to print.
+    </div>
+
+    <div class="PrintArea area2 both" style="border-color: #999;">
+        <div>Print Area 2</div>
+        <span style="color: #000777;">print me</span>
+        <span class="test">xyz</span>
+        <br>
+        <input name="chkTest3" value="1" type="checkbox">
+        <input name="chkTest4" value="2" type="checkbox">
+        <br>
+        <input value="3" name="rdoTest4" type="radio">
+        <input value="4" name="rdoTest4" type="radio">
+        <br>
+        <input value="" name="textTest6" type="text">
+        <br>
+        <select name="selTest7">
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+        </select>
+        <select name="selTest8" multiple="">
+            <option value="a">a</option>
+            <option value="b">b</option>
+            <option value="c">c</option>
+        </select>
+        <br>
+        <textarea name="textareaTest9"></textarea>
+        <br>
+        <img src="FoesEnd.jpg" id="img2" alt="test" width="200">
+    </div>
+  </div>
+
+  <div style="border: solid 2px #999fff; float: left; margin-left: 20px;">
+    <div style="width: 400px; padding: 20px;">
+        <div class="button b1">Print</div>
+        <br>
+
+        <div style="font-weight: bold; border-top: solid 1px #999fff; padding-top: 10px;">Settings</div>
         <table>
           <tbody><tr>
             <td><input value="popup" name="mode" id="popup" checked="" type="radio"> Popup</td>
@@ -56,22 +99,57 @@
             <td><input value="iframe" name="mode" id="iFrame" type="radio"> IFrame</td>
           </tr>
           <tr>
-            <td>Extra css: <input type="text" name="extraCss" /></td>
+            <td>Extra css: <input type="text" name="extraCss" size="50" /></td>
+          </tr>
+          <tr>
+            <td>Print both areas: <input type="checkbox" name="printBoth" id="printBoth" /></td>
+          </tr>
+          <tr>
+            <td><div style="display: inline-block; vertical-align: top;">Retain Attributes:</div>
+              <div style="display: inline-block; padding-left: 10px;">
+                Class <input type="checkbox" checked name="retainCss"   id="retainCss" class="chkAttr" value="class" />
+                <br>
+                ID    <input type="checkbox" checked name="retainId"    id="retainId"  class="chkAttr" value="id" />
+                <br>
+                Style <input type="checkbox" checked name="retainStyle" id="retainId"  class="chkAttr" value="style" />
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><div style="padding: 3px; border: solid 1px #ddd;">Add to head :
+                    <input type="checkbox" checked name="addElements" id="addElements" class="chkAttr" />
+                    <pre>&lt;meta charset="utf-8" /&gt;<br>&lt;http-equiv="X-UA-Compatible" content="IE=edge"/&gt;</pre>
+                </div>
+            </td>
           </tr>
         </tbody></table>
     </div>
+  </div>
 
-    <script>
+  <script>
     $(document).ready(function(){
         $("div.b1").click(function(){
 
             var mode = $("input[name='mode']:checked").val();
             var close = mode == "popup" && $("input#closePop").is(":checked");
             var extraCss = $("input[name='extraCss']").val();
+            var printBoth = $("#printBoth").is(":checked");
 
-            var options = { mode : mode, popClose : close, extraCss : extraCss };
+            var keepAttr = [];
+            $(".chkAttr").each(function(){
+                if ($(this).is(":checked") == false )
+                    return;
 
-            $("div.PrintArea.p1").printArea( options );
+                keepAttr.push( $(this).val() );
+            });
+
+            var headElements = $("input#addElements").is(":checked") ? '<meta charset="utf-8" />,<meta http-equiv="X-UA-Compatible" content="IE=edge"/>' : '';
+
+            var options = { mode : mode, popClose : close, extraCss : extraCss, retainAttr : keepAttr, extraHead : headElements };
+
+            var print = "div.PrintArea." + ( printBoth ? "both" : "area1" );
+
+            $( print ).printArea( options );
         });
 
         $("input[name='mode']").click(function(){
@@ -79,6 +157,6 @@
         });
     });
 
-    </script>
+  </script>
 </body>
 </html>
