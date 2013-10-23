@@ -2,7 +2,7 @@ This software is licensed under the MIT agreement. Please see license.txt for an
 
 Update 2.3.2
 
-    - Fixed bug in IE8 browsers. Switch from for-in to for-each.
+    - Fixed bug in IE8 browsers and jquery 1.7 (as reported in issues). Switch from for-in to for-each.
 
 Update 2.3.1
 
