@@ -1,5 +1,5 @@
 /**
- *  Version 2.3.2 Copyright (C) 2013
+ *  Version 2.3.3 Copyright (C) 2013
  *  Tested in IE 10, FF 21.0 and Chrome 27.0.1453.110
  *  No official support for other browsers, but will TRY to accommodate challenges in other browsers.
  *  Example:
@@ -45,40 +45,42 @@
     var settings = {};//global settings
 
     $.fn.printArea = function( options )
+    {
+        $.extend( settings, defaults, options );
+
+        counter++;
+        var idPrefix = "printArea_";
+        $( "[id^=" + idPrefix + "]" ).remove();
+
+        settings.id = idPrefix + counter;
+
+        var writeDoc;
+        var printWindow;
+
+        switch ( settings.mode )
         {
-            $.extend( settings, defaults, options );
+            case modes.iframe :
+                var f = new Iframe();
+                writeDoc = f.doc;
+                printWindow = f.contentWindow || f;
+                break;
+            case modes.popup :
+                printWindow = new Popup();
+                writeDoc = printWindow.doc;
+        }
 
-            counter++;
-            var idPrefix = "printArea_";
-            $( "[id^=" + idPrefix + "]" ).remove();
+        writeDoc.open();
+        writeDoc.write( docType() + "<html>" + getHead() + getBody( $(this) ) + "</html>" );
+        writeDoc.close();
 
-            settings.id = idPrefix + counter;
-
-            var writeDoc;
-            var printWindow;
-
-            switch ( settings.mode )
-            {
-                case modes.iframe :
-                    var f = new Iframe();
-                    writeDoc = f.doc;
-                    printWindow = f.contentWindow || f;
-                    break;
-                case modes.popup :
-                    printWindow = new Popup();
-                    writeDoc = printWindow.doc;
-            }
-
-            writeDoc.open();
-            writeDoc.write( docType() + "<html>" + getHead() + getBody( $(this) ) + "</html>" );
-            writeDoc.close();
-
+        $(writeDoc).ready(function(){
             printWindow.focus();
             printWindow.print();
 
             if ( settings.mode == modes.popup && settings.popClose )
-                printWindow.close();
-        }
+                setTimeout(function() { printWindow.close(); }, 2000);
+        });
+    }
 
     function docType()
     {

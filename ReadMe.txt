@@ -1,5 +1,10 @@
 This software is licensed under the MIT agreement. Please see license.txt for any additional requests.
 
+Update 2.3.3
+
+    - Issue reported that when using Chrome, css not being applied correctly. Added delay to allow css to be applied correctly to print document.
+        Thanks jer-gallagher-oe for supplying the fix!
+
 Update 2.3.2
 
     - Fixed bug in IE8 browsers and jquery 1.7 (as reported in issues). Switch from for-in to for-each.
