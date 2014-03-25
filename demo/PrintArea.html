@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script src="jquery-1.9.0.js" type="text/JavaScript" language="javascript"></script>
+        <script src="jquery-1.10.2.js" type="text/JavaScript" language="javascript"></script>
+        <script src="jquery-ui-1.10.4.custom.js"></script>
         <script src="jquery.PrintArea.js" type="text/JavaScript" language="javascript"></script>
+
+        <link type="text/css" rel="stylesheet" href="css/ui-lightness/jquery-ui-1.10.4.custom.css" />
 
         <link type="text/css" rel="stylesheet" href="PrintArea.css" />                <!-- Y : rel is stylesheet and media is in [all,print,empty,undefined] -->
         <link type="text/css" rel="stylesheet" href="media_all.css"  media="all" />   <!-- Y : rel is stylesheet and media is in [all,print,empty,undefined] -->
@@ -19,7 +22,7 @@
         <br>
         This is just a sample page to demonstrate this plugin.
     </div>
-    <div class="PrintArea area1 both" id="Retain">
+    <div class="PrintArea area1 all" id="Retain">
         <div>Print Area 1</div>
         <span style="color: #000777;">print me</span>
         <span class="test">xyz</span>
@@ -52,7 +55,7 @@
         I don't want this to print.
     </div>
 
-    <div class="PrintArea area2 both" style="border-color: #999;">
+    <div class="PrintArea area2 all" style="border-color: #999;">
         <div>Print Area 2</div>
         <span style="color: #000777;">print me</span>
         <span class="test">xyz</span>
@@ -82,14 +85,23 @@
     </div>
   </div>
 
-  <div style="border: solid 2px #999fff; float: left; margin-left: 20px;">
+  <div class="testDialog">
+    <div class="PrintArea area3 all">
+        This is Print Area 3
+    </div>
+  </div>
+
+  <div style="border: solid 2px #999fff; float: left; margin-left: 20px;" class="SettingsBox">
     <div style="width: 400px; padding: 20px;">
-        <div class="button b1">Print</div>
-        <br>
+        <div style="padding: 0 10px 10px;" class="buttonBar">
+          <div class="button b1">Print</div>
+          <div class="toggleDialog">open dialog</div>
+        </div>
 
         <div style="font-weight: bold; border-top: solid 1px #999fff; padding-top: 10px;">Settings</div>
         <table>
-          <tbody><tr>
+          <tbody>
+          <tr>
             <td><input value="popup" name="mode" id="popup" checked="" type="radio"> Popup</td>
           </tr>
           <tr>
@@ -102,16 +114,22 @@
             <td>Extra css: <input type="text" name="extraCss" size="50" /></td>
           </tr>
           <tr>
-            <td>Print both areas: <input type="checkbox" name="printBoth" id="printBoth" /></td>
+            <td><div class="settingName">Print area:</div>
+              <div class="settingVals">
+                <input type="checkbox" class="selPA" value="area1" checked /> Area 1<br>
+                <input type="checkbox" class="selPA" value="area2" checked /> Area 2<br>
+                <input type="checkbox" class="selPA" value="area3" checked /> Area 3<br>
+              </div>
+            </td>
           </tr>
           <tr>
-            <td><div style="display: inline-block; vertical-align: top;">Retain Attributes:</div>
-              <div style="display: inline-block; padding-left: 10px;">
-                Class <input type="checkbox" checked name="retainCss"   id="retainCss" class="chkAttr" value="class" />
+            <td><div class="settingName">Retain Attributes:</div>
+              <div class="settingVals">
+                <input type="checkbox" checked name="retainCss"   id="retainCss" class="chkAttr" value="class" /> Class
                 <br>
-                ID    <input type="checkbox" checked name="retainId"    id="retainId"  class="chkAttr" value="id" />
+                <input type="checkbox" checked name="retainId"    id="retainId"  class="chkAttr" value="id" /> ID
                 <br>
-                Style <input type="checkbox" checked name="retainStyle" id="retainId"  class="chkAttr" value="style" />
+                <input type="checkbox" checked name="retainStyle" id="retainId"  class="chkAttr" value="style" /> Style
               </div>
             </td>
           </tr>
@@ -128,12 +146,23 @@
 
   <script>
     $(document).ready(function(){
+
+        var dialog = $("div.testDialog").dialog({position : { my : "left top", at : "left bottom+50", of : ".SettingsBox" }, width: "600", title: "Print Dialog Box Contents"});
+
+        $(".toggleDialog").click(function(){
+            dialog.dialog("open");
+        });
+
         $("div.b1").click(function(){
 
             var mode = $("input[name='mode']:checked").val();
             var close = mode == "popup" && $("input#closePop").is(":checked");
             var extraCss = $("input[name='extraCss']").val();
-            var printBoth = $("#printBoth").is(":checked");
+
+            var print = "";
+            $("input.selPA:checked").each(function(){
+                print += (print.length > 0 ? "," : "") + "div.PrintArea." + $(this).val();
+            });
 
             var keepAttr = [];
             $(".chkAttr").each(function(){
@@ -146,8 +175,6 @@
             var headElements = $("input#addElements").is(":checked") ? '<meta charset="utf-8" />,<meta http-equiv="X-UA-Compatible" content="IE=edge"/>' : '';
 
             var options = { mode : mode, popClose : close, extraCss : extraCss, retainAttr : keepAttr, extraHead : headElements };
-
-            var print = "div.PrintArea." + ( printBoth ? "both" : "area1" );
 
             $( print ).printArea( options );
         });
