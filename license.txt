@@ -1,8 +1,8 @@
 PrintArea is a plugin designed to print specified areas of a web page.  
 
 Earlier versions of this plugin did not have a license agreement, and were originally published on the old jquery website 
-in their plugin repository. I did not immediately transfer the project to github and some of my older versions are not available here, but I have 
-found some older versions in other repositories and still have the original ~50 lines of code. 
+in their plugin repository. I did not immediately transfer the project to github and some of my older versions are not 
+available here, but I havefound some older versions in other repositories and still have the original ~50 lines of code. 
 
 You can use this plugin as you wish, but please do not add versions of the plugin to 
 public repositories without pointing back to this project.
