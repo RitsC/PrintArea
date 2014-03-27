@@ -1,7 +1,7 @@
-PrintArea is a plugin designed to print specified areas of a web page, as
-designed by the developer (myself).  It is licensed under the MIT agreement.
+PrintArea is a plugin designed to print specified areas of a web page.  
 
 Earlier versions of this plugin did not have a license agreement. I am saying that you can use this plugin as you wish, but
 please do not add versions of the plugin to public repositories without pointing back to this project.
 
+This plugin (PrintArea) is licensed under the MIT agreement.
 MIT license: http://opensource.org/licenses/MIT
