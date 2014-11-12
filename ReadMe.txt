@@ -1,9 +1,12 @@
 This software is licensed under the MIT agreement. Please see license.txt for any additional requests.
 
-You can specify 2 modes of printing. 
-Iframe mode is unobtrusive while popup mode opens a separate browser window. 
-Popup mode allows for the option of leaving the window open or automatically closing after printing.  
-Other options were added as the need arose, such as adding css to the page printed document, retaining attributes of the source element, adding elements to the head of the document printed and specifying several predefined document standards (the default is html5), even the popup was not part of the original plan. 
+You can specify 2 modes of printing.
+Iframe mode is unobtrusive while popup mode opens a separate browser window.
+Popup mode allows for the option of leaving the window open or automatically closing after printing.
+Other options were added as the need arose, such as adding css to the page printed document, retaining attributes of the source element, adding elements to the head of the document printed and specifying several predefined document standards (the default is html5), even the popup was not part of the original plan.
+
+Update 2.4.1
+    - Fixed issue where input lacks a type (ie [type="text"]) will include value.
 
 Update 2.4.0
     - Issue reported in IE (specifically 11) that the iframe mode is printing the whole page.

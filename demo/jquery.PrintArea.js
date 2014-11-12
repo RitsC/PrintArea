@@ -1,5 +1,5 @@
 /**
- *  Version 2.4.0 Copyright (C) 2013
+ *  Version 2.4.1 Copyright (C) 2013
  *  Tested in IE 11, FF 28.0 and Chrome 33.0.1750.154
  *  No official support for other browsers, but will TRY to accommodate challenges in other browsers.
  *  Example:
@@ -139,7 +139,7 @@
                 var copiedInput = copiedInputs.eq( i );
 
                 if ( typeInput == "radio" || typeInput == "checkbox" ) copiedInput.attr( "checked", $(this).is(":checked") );
-                else if ( typeInput == "text" ) copiedInput.attr( "value", $(this).val() );
+                else if ( typeInput == "text" || typeInput == "" ) copiedInput.attr( "value", $(this).val() );
                 else if ( typeInput == "select" )
                     $(this).find( "option" ).each( function( i ) {
                         if ( $(this).is(":selected") ) $("option", copiedInput).eq( i ).attr( "selected", true );
