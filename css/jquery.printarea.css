@@ -1,12 +1,13 @@
-
 .PrintArea {
     margin: 20px 5px;
     padding: 10px;
     width: 400px;
 }
+
 .buttonBar {
     height: 30px;
 }
+
 .buttonBar div {
     display: inline-block;
     float: left;
@@ -14,6 +15,7 @@
     padding: 3px 12px;
     cursor: pointer;
 }
+
 .button {
     background: none repeat scroll 0 0 #999999;
     border: 1px solid blue;
@@ -21,8 +23,15 @@
     text-align: center;
 }
 
-div.settingName { display: inline-block; vertical-align: top; }
-div.settingVals { display: inline-block; padding-left: 10px; }
+div.settingName {
+    display: inline-block;
+    vertical-align: top;
+}
+
+div.settingVals {
+    display: inline-block;
+    padding-left: 10px;
+}
 
 span.test {
     color: red;
