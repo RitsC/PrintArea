@@ -1,0 +1,27 @@
+{
+  "name": "PrintArea",
+  "version": "2.4.2",
+  "homepage": "https://github.com/RitsC/PrintArea",
+  "authors": [
+    "Chris Ritschard",
+    "Djuri Baars"
+  ],
+  "description": "Prints a specific area of the page. Using json settings, the printed area is either opened in a popup or in a hidden iframe. Minimal setup and easy to use. See the demo for examples and usage of the options.",
+  "main": "js/jquery.printarea.js",
+  "keywords": [
+    "print",
+    "printing"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "jquery": ">=1.9",
+    "jquery-ui": ">=1.10.4"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
